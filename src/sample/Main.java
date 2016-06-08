@@ -6,10 +6,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -20,9 +24,15 @@ public class Main extends Application {
     public Random random=new Random();
     public int misileNo=4;
     int bulletThrow=0;
+    public int bulletHit=0;
     public int enemy1Dead=0;
     public int enemy2Dead=0;
     public int enemy3Dead=0;
+    public  int misile1Hit=0;
+    public  int misile2Hit=0;
+    public  int misile3Hit=0;
+
+    public Integer score=0;
 
 
     @Override
@@ -68,6 +78,31 @@ public class Main extends Application {
         ImageView enemy1=new ImageView(new Image("resource/Enemy-redYellow.png"));
         ImageView enemy2=new ImageView(new Image("resource/EnemyBlack.png"));
         ImageView enemy3=new ImageView(new Image("resource/WhiteShark.png"));
+        ImageView Bomb1=new ImageView(new Image("resource/Bomb.png"));
+        ImageView Bomb2=new ImageView(new Image("resource/Bomb.png"));
+        ImageView Bomb3=new ImageView(new Image("resource/Bomb.png"));
+        ImageView Score=new ImageView(new Image("resource/Score.png"));
+
+        ImageView MisileRemaining=new ImageView(new Image("resource/MissileReamining.png"));
+        MisileRemaining.setLayoutX(1030);
+        ImageView misilesSet1=new ImageView(new Image("resource/misiles.png"));
+        misilesSet1.setLayoutX(1190);
+        ImageView misilesSet2=new ImageView(new Image("resource/misiles.png"));
+        misilesSet2.setLayoutX(1220);
+        ImageView misilesSet3=new ImageView(new Image("resource/misiles.png"));
+        misilesSet3.setLayoutX(1250);
+
+        Score.setLayoutX(550);
+
+        Text ScoreCount=new Text(score.toString());
+        ScoreCount.fontProperty().setValue(Font.font(80));
+        ScoreCount.setFill(Color.GOLD);
+        ScoreCount.setLayoutX(730);
+        ScoreCount.setLayoutY(50);
+
+
+        //life
+        ImageView life1=new ImageView(new Image("resource/"))
 
         background1.setLayoutX(0);
         background2.setLayoutX(1280);
@@ -77,6 +112,15 @@ public class Main extends Application {
         enemy2.setLayoutY(270);
         enemy3.setLayoutX(1100);
         enemy3.setLayoutY(500);
+        //Bombs
+        Bomb1.setLayoutX(enemy1.getLayoutX()+10);
+        Bomb1.setLayoutY(enemy1.getLayoutY()+60);
+
+        Bomb2.setLayoutX(enemy2.getLayoutX()+2);
+        Bomb2.setLayoutY(enemy2.getLayoutY()+68);
+
+        Bomb3.setLayoutX(enemy3.getLayoutX()+16);
+        Bomb3.setLayoutY(enemy3.getLayoutY()+64);
 
         ImageView plane=new ImageView(new Image("resource/US-AF.png"));
         plane.setLayoutX(30);
@@ -102,7 +146,7 @@ public class Main extends Application {
         misile3.setLayoutY(plane.getLayoutY()-20);
 
 
-        game.getChildren().addAll(background1,background2,plane,misile1,misile2,misile3,enemy1,enemy2,enemy3, bullet[0]);
+        game.getChildren().addAll(background1,background2,plane,misile1,misile2,misile3,enemy1,enemy2,enemy3, bullet[0],Bomb1,Bomb2,Bomb3,Score,misilesSet1,misilesSet2,misilesSet3,MisileRemaining,ScoreCount);
         Scene gameplay = new Scene(game, 1280, 720);
 
         KeyValue back1=new KeyValue(background1.layoutXProperty(),-1280);
@@ -135,7 +179,10 @@ public class Main extends Application {
                 if(plane.getLayoutX()<900)
                 {
                     plane.setLayoutX(plane.getLayoutX() + 10);
-                    bullet[0].setLayoutX(bullet[0].getLayoutX()+10);
+                    if(bulletThrow==0)
+                    {
+                        bullet[0].setLayoutX(bullet[0].getLayoutX()+10);
+                    }
                     misile1.setLayoutX(misile1.getLayoutX()+10);
                     misile2.setLayoutX(misile2.getLayoutX()+10);
                     misile3.setLayoutX(misile3.getLayoutX()+10);
@@ -146,7 +193,10 @@ public class Main extends Application {
                 if(plane.getLayoutX()>0)
                 {
                     plane.setLayoutX(plane.getLayoutX() - 10);
-                    bullet[0].setLayoutX(bullet[0].getLayoutX()-10);
+                    if(bulletThrow==0)
+                    {
+                        bullet[0].setLayoutX(bullet[0].getLayoutX()-10);
+                    }
                     misile1.setLayoutX(misile1.getLayoutX()-10);
                     misile2.setLayoutX(misile2.getLayoutX()-10);
                     misile3.setLayoutX(misile3.getLayoutX()-10);
@@ -157,7 +207,10 @@ public class Main extends Application {
                 if(plane.getLayoutY()>0)
                 {
                     plane.setLayoutY(plane.getLayoutY() -5);
-                    bullet[0].setLayoutY(bullet[0].getLayoutY()-5);
+                    if(bulletThrow==0)
+                    {
+                        bullet[0].setLayoutY(bullet[0].getLayoutY()-5);
+                    }
                     misile1.setLayoutY(misile1.getLayoutY()-5);
                     misile2.setLayoutY(misile2.getLayoutY()-5);
                     misile3.setLayoutY(misile3.getLayoutY()-5);
@@ -168,7 +221,10 @@ public class Main extends Application {
                 if(plane.getLayoutY()<600)
                 {
                     plane.setLayoutY(plane.getLayoutY() +5);
-                    bullet[0].setLayoutY(bullet[0].getLayoutY()+5);
+                    if(bulletThrow==0)
+                    {
+                        bullet[0].setLayoutY(bullet[0].getLayoutY()+5);
+                    }
                     misile1.setLayoutY(misile1.getLayoutY()+5);
                     misile2.setLayoutY(misile2.getLayoutY()+5);
                     misile3.setLayoutY(misile3.getLayoutY()+5);
@@ -205,24 +261,27 @@ public class Main extends Application {
                 }
                 if(enemy3.getLayoutX()<-400)
                 {
-                    enemy3.setLayoutY(random.nextInt(ran+500));
+                    enemy3.setLayoutY(ran+340);
                 }
 
                 //misile throw
                 if(misile1.getLayoutX()<1300 &&misileNo<=3)
                 {
                     misile1.setOpacity(1);
+                    misilesSet3.setOpacity(0);
                     misile1.setLayoutX(misile1.getLayoutX()+3);
                 }
                 else  if (misile2.getLayoutX()<1300&&misileNo<=2)
                 {
                     misile2.setOpacity(1);
+                    misilesSet2.setOpacity(0);
                     misile2.setLayoutX(misile2.getLayoutX()+3);
 
                 }
                 else if(misile3.getLayoutX()<1300&&misileNo<=1)
                 {
                     misile3.setOpacity(1);
+                    misilesSet1.setOpacity(0);
                     misile3.setLayoutX(misile3.getLayoutX()+3);
                     //misileThrow=0;
                 }
@@ -239,100 +298,141 @@ public class Main extends Application {
                 {
                     bullet[0].setOpacity(1);
                     bullet[0].setLayoutX(bullet[0].getLayoutX()+6);
-                    if(bullet[0].getLayoutX()>1280)
-                    {
-                        bullet[0].setLayoutX(plane.getLayoutX()+159);
-                        bullet[0].setLayoutY(plane.getLayoutY()+46);
-                        bullet[0].setOpacity(0.25);
-                        bulletThrow=0;
-                    }
+                }
+                if(bullet[0].getLayoutX()>1280||bullet[0].getOpacity()==0)
+                {
+                    bullet[0].setLayoutX(plane.getLayoutX()+159);
+                    bullet[0].setLayoutY(plane.getLayoutY()+46);
+                    bullet[0].setOpacity(0.5);
+                    bulletThrow=0;
+                    bulletHit=0;
+                }
+                if(bulletHit==1)
+                {
+                    bullet[0].setOpacity(0);
+                    bullet[0].setLayoutX(bullet[0].getLayoutX()+6);
+                    bulletThrow=0;
                 }
                 //enemy1 dead
-                if(((bullet[0].getLayoutX()+41>=enemy1.getLayoutX()&&bullet[0].getLayoutX()<=enemy1.getLayoutX()+131)&&(bullet[0].getLayoutY()+3>=enemy1.getLayoutY()&&bullet[0].getLayoutY()<=enemy1.getLayoutY()+106)))
+                if(enemy1Dead==0&&bulletHit==0&&((bullet[0].getLayoutX()+41>=enemy1.getLayoutX()&&bullet[0].getLayoutX()<=enemy1.getLayoutX()+131)&&(bullet[0].getLayoutY()+3>=enemy1.getLayoutY()&&bullet[0].getLayoutY()<=enemy1.getLayoutY()+106)))
                 {
                     enemy1Dead=1;
                     enemy1.setOpacity(0);
+                    bulletHit=1;
+                    score+=10;
+                    ScoreCount.setText(score.toString());
                 }
-                if((misile1.getLayoutX()+70>=enemy1.getLayoutX()&&misile1.getLayoutX()<=enemy1.getLayoutX()+131)&&(misile1.getLayoutY()+19>=enemy1.getLayoutY()&&misile1.getLayoutY()<=enemy1.getLayoutY()+106))
+                if(enemy1Dead==0&&misile1Hit==0&&(misile1.getLayoutX()+70>=enemy1.getLayoutX()&&misile1.getLayoutX()<=enemy1.getLayoutX()+131)&&(misile1.getLayoutY()+19>=enemy1.getLayoutY()&&misile1.getLayoutY()<=enemy1.getLayoutY()+106))
                 {
                     enemy1Dead=1;
                     enemy1.setOpacity(0);
                     misile1.setOpacity(0);
+                    score+=10;
+                    ScoreCount.setText(score.toString());
                 }
-                if((misile2.getLayoutX()+70>=enemy1.getLayoutX()&&misile2.getLayoutX()<=enemy1.getLayoutX()+131)&&(misile2.getLayoutY()+19>=enemy1.getLayoutY()&&misile2.getLayoutY()<=enemy1.getLayoutY()+106))
+                if(enemy1Dead==0&&misile2Hit==0&&(misile2.getLayoutX()+70>=enemy1.getLayoutX()&&misile2.getLayoutX()<=enemy1.getLayoutX()+131)&&(misile2.getLayoutY()+19>=enemy1.getLayoutY()&&misile2.getLayoutY()<=enemy1.getLayoutY()+106))
                 {
                     enemy1Dead=1;
                     enemy1.setOpacity(0);
                     misile2.setOpacity(0);
+                    bullet[0].setOpacity(0);
+                    score+=10;
+                    ScoreCount.setText(score.toString());
                 }
-                if((misile3.getLayoutX()+70>=enemy1.getLayoutX()&&misile3.getLayoutX()<=enemy1.getLayoutX()+131)&&(misile3.getLayoutY()+19>=enemy1.getLayoutY()&&misile3.getLayoutY()<=enemy1.getLayoutY()+106))
+                if(enemy1Dead==0&&misile3Hit==0&&(misile3.getLayoutX()+70>=enemy1.getLayoutX()&&misile3.getLayoutX()<=enemy1.getLayoutX()+131)&&(misile3.getLayoutY()+19>=enemy1.getLayoutY()&&misile3.getLayoutY()<=enemy1.getLayoutY()+106))
                 {
                     enemy1Dead=1;
                     enemy1.setOpacity(0);
                     misile3.setOpacity(0);
+                    score+=10;
+                    ScoreCount.setText(score.toString());
                 }
                 //enemy2 dead
-                if(((bullet[0].getLayoutX()+41>=enemy2.getLayoutX()+2&&bullet[0].getLayoutX()<=enemy2.getLayoutX()+146)&&(bullet[0].getLayoutY()+3>=enemy2.getLayoutY()+24&&bullet[0].getLayoutY()<=enemy2.getLayoutY()+83)))
+                if(enemy2Dead==0&&bulletHit==0&&((bullet[0].getLayoutX()+41>=enemy2.getLayoutX()+2&&bullet[0].getLayoutX()<=enemy2.getLayoutX()+146)&&(bullet[0].getLayoutY()+3>=enemy2.getLayoutY()+24&&bullet[0].getLayoutY()<=enemy2.getLayoutY()+83)))
                 {
                     enemy2Dead=1;
                     enemy2.setOpacity(0);
+                    bullet[0].setOpacity(0);
+                    bulletHit=1;
+                    score+=10;
+                    ScoreCount.setText(score.toString());
                 }
-                if((misile1.getLayoutX()+70>=enemy2.getLayoutX()+2&&misile1.getLayoutX()<=enemy2.getLayoutX()+146)&&(misile1.getLayoutY()+19>=enemy2.getLayoutY()+24&&misile1.getLayoutY()<=enemy2.getLayoutY()+83))
+                if(enemy2Dead==0&&misile1Hit==0&&(misile1.getLayoutX()+70>=enemy2.getLayoutX()+2&&misile1.getLayoutX()<=enemy2.getLayoutX()+146)&&(misile1.getLayoutY()+19>=enemy2.getLayoutY()+24&&misile1.getLayoutY()<=enemy2.getLayoutY()+83))
                 {
                     enemy2Dead=1;
                     enemy2.setOpacity(0);
                     misile1.setOpacity(0);
+                    score+=10;
+                    System.out.println(score);
                 }
-                if((misile2.getLayoutX()+70>=enemy2.getLayoutX()+2&&misile2.getLayoutX()<=enemy2.getLayoutX()+146)&&(misile2.getLayoutY()+19>=enemy2.getLayoutY()+24&&misile2.getLayoutY()<=enemy2.getLayoutY()+83))
+                if(enemy2Dead==0&&misile2Hit==0&&(misile2.getLayoutX()+70>=enemy2.getLayoutX()+2&&misile2.getLayoutX()<=enemy2.getLayoutX()+146)&&(misile2.getLayoutY()+19>=enemy2.getLayoutY()+24&&misile2.getLayoutY()<=enemy2.getLayoutY()+83))
                 {
                     enemy2Dead=1;
                     enemy2.setOpacity(0);
                     misile2.setOpacity(0);
+                    score+=10;
+                    System.out.println(score);
                 }
-                if((misile3.getLayoutX()+70>=enemy2.getLayoutX()+2&&misile3.getLayoutX()<=enemy2.getLayoutX()+146)&&(misile3.getLayoutY()+19>=enemy2.getLayoutY()+24&&misile3.getLayoutY()<=enemy2.getLayoutY()+83))
+                if(enemy2Dead==0&&misile3Hit==0&&(misile3.getLayoutX()+70>=enemy2.getLayoutX()+2&&misile3.getLayoutX()<=enemy2.getLayoutX()+146)&&(misile3.getLayoutY()+19>=enemy2.getLayoutY()+24&&misile3.getLayoutY()<=enemy2.getLayoutY()+83))
                 {
                     enemy2Dead=1;
                     enemy2.setOpacity(0);
                     misile3.setOpacity(0);
+                    score+=10;
+                    System.out.println(score);
                 }
                 //enemy3 dead
-                if(((bullet[0].getLayoutX()+41>=enemy3.getLayoutX()+17&&bullet[0].getLayoutX()<=enemy3.getLayoutX()+106)&&(bullet[0].getLayoutY()+3>=enemy3.getLayoutY()+32&&bullet[0].getLayoutY()<=enemy3.getLayoutY()+108)))
+                if(enemy3Dead==0&&bulletHit==0&&((bullet[0].getLayoutX()+41>=enemy3.getLayoutX()+17&&bullet[0].getLayoutX()<=enemy3.getLayoutX()+106)&&(bullet[0].getLayoutY()+3>=enemy3.getLayoutY()+32&&bullet[0].getLayoutY()<=enemy3.getLayoutY()+108)))
                 {
                     enemy3Dead=1;
                     enemy3.setOpacity(0);
+                    bulletHit=1;
+                    score+=10;
+                    System.out.println(score);
                 }
-                if((misile1.getLayoutX()+70>=enemy3.getLayoutX()+17&&misile1.getLayoutX()<=enemy3.getLayoutX()+106)&&(misile1.getLayoutY()+19>=enemy3.getLayoutY()+32&&misile1.getLayoutY()<=enemy3.getLayoutY()+108))
+                if(enemy3Dead==0&&misile1Hit==0&&(misile1.getLayoutX()+70>=enemy3.getLayoutX()+17&&misile1.getLayoutX()<=enemy3.getLayoutX()+106)&&(misile1.getLayoutY()+19>=enemy3.getLayoutY()+32&&misile1.getLayoutY()<=enemy3.getLayoutY()+108))
                 {
                     enemy3Dead=1;
                     enemy3.setOpacity(0);
                     misile1.setOpacity(0);
+//                    score+=10;
+//                    System.out.println(score);
                 }
-                if((misile2.getLayoutX()+70>=enemy3.getLayoutX()+17&&misile2.getLayoutX()<=enemy3.getLayoutX()+106)&&(misile2.getLayoutY()+19>=enemy3.getLayoutY()+32&&misile2.getLayoutY()<=enemy3.getLayoutY()+108))
+                if(enemy3Dead==0&&misile2Hit==0&&(misile2.getLayoutX()+70>=enemy3.getLayoutX()+17&&misile2.getLayoutX()<=enemy3.getLayoutX()+106)&&(misile2.getLayoutY()+19>=enemy3.getLayoutY()+32&&misile2.getLayoutY()<=enemy3.getLayoutY()+108))
                 {
                     enemy3Dead=1;
                     enemy3.setOpacity(0);
                     misile2.setOpacity(0);
+                    score+=10;
+                    System.out.println(score);
                 }
-                if((misile3.getLayoutX()+70>=enemy3.getLayoutX()+17&&misile3.getLayoutX()<=enemy3.getLayoutX()+106)&&(misile3.getLayoutY()+19>=enemy3.getLayoutY()+32&&misile3.getLayoutY()<=enemy3.getLayoutY()+108))
+                if(enemy3Dead==0&&misile3Hit==0&&(misile3.getLayoutX()+70>=enemy3.getLayoutX()+17&&misile3.getLayoutX()<=enemy3.getLayoutX()+106)&&(misile3.getLayoutY()+19>=enemy3.getLayoutY()+32&&misile3.getLayoutY()<=enemy3.getLayoutY()+108))
                 {
                     enemy3Dead=1;
                     enemy3.setOpacity(0);
                     misile3.setOpacity(0);
+                    score+=10;
+                    System.out.println(score);
                 }
 
                 //dead enemy and scoring
                 if(enemy1Dead==1)
                 {
+//                    score+=10;
+//                    System.out.println(score);
                    if(enemy1.getLayoutX()<-400)
                    {
                        enemy1.setOpacity(1);
+                       enemy1Dead=0;
                    }
                 }
                 if(enemy2Dead==1)
                 {
+                    //ScoreCount.textProperty().bind(score);
                     if(enemy2.getLayoutX()<-400)
                     {
                         enemy2.setOpacity(1);
+                        enemy2Dead=0;
                     }
                 }
                 if(enemy3Dead==1)
@@ -340,7 +440,32 @@ public class Main extends Application {
                     if(enemy3.getLayoutX()<-400)
                     {
                         enemy3.setOpacity(1);
+                        enemy3Dead=0;
                     }
+                }
+                //enemyBomb1ing
+                Bomb1.setLayoutX(Bomb1.getLayoutX()-10);
+                Bomb1.setLayoutY(Bomb1.getLayoutY());
+
+                Bomb2.setLayoutX(Bomb2.getLayoutX()-10);
+                Bomb2.setLayoutY(Bomb2.getLayoutY());
+
+                Bomb3.setLayoutX(Bomb3.getLayoutX()-10);
+                Bomb3.setLayoutY(Bomb3.getLayoutY());
+                if(Bomb1.getLayoutX()<-400)
+                {
+                    Bomb1.setLayoutX(enemy1.getLayoutX()+10);
+                    Bomb1.setLayoutY(enemy1.getLayoutY()+40);
+                }
+                if(Bomb2.getLayoutX()<-400)
+                {
+                    Bomb2.setLayoutX(enemy2.getLayoutX()+2);
+                    Bomb2.setLayoutY(enemy2.getLayoutY()+35);
+                }
+                if(Bomb3.getLayoutX()<-400)
+                {
+                    Bomb3.setLayoutX(enemy3.getLayoutX()-13);
+                    Bomb3.setLayoutY(enemy3.getLayoutY()+30);
                 }
 
             }
@@ -349,7 +474,8 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         launch(args);
     }
 }
