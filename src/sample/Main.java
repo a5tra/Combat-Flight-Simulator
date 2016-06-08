@@ -2,6 +2,7 @@ package sample;
 
 import javafx.animation.*;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -33,6 +34,9 @@ public class Main extends Application {
     public  int misile3Hit=0;
 
     public Integer score=0;
+    public int life=3;
+    public int start=0;
+    public int bomb=0;
 
 
     @Override
@@ -45,24 +49,28 @@ public class Main extends Application {
 
         ImageView play = new ImageView(new Image("resource/plnw.png"));
         Button newGame = new Button("", play);
+        newGame.setPadding(Insets.EMPTY);
         newGame.setLayoutX(900);
         newGame.setLayoutY(150);
         introLayout.getChildren().addAll(newGame);
 
-        ImageView highScore = new ImageView(new Image("resource/leaderboard.png"));
-        Button leaderBoard = new Button("", highScore);
-        leaderBoard.setLayoutX(900);
-        leaderBoard.setLayoutY(250);
-        introLayout.getChildren().add(leaderBoard);
+//        ImageView highScore = new ImageView(new Image("resource/leaderboard.png"));
+//        Button leaderBoard = new Button("", highScore);
+//        leaderBoard.setPadding(Insets.EMPTY);
+//        leaderBoard.setLayoutX(900);
+//        leaderBoard.setLayoutY(250);
+//        introLayout.getChildren().add(leaderBoard);
 
         ImageView help = new ImageView(new Image("resource/instructions.png"));
         Button instructions = new Button("", help);
+        instructions.setPadding(Insets.EMPTY);
         instructions.setLayoutX(900);
-        instructions.setLayoutY(350);
+        instructions.setLayoutY(300);
         introLayout.getChildren().add(instructions);
 
         ImageView quit = new ImageView(new Image("resource/exit.jpg"));
         Button exit = new Button("", quit);
+        exit.setPadding(Insets.EMPTY);
         exit.setLayoutX(900);
         exit.setLayoutY(450);
         introLayout.getChildren().add(exit);
@@ -98,11 +106,25 @@ public class Main extends Application {
         ScoreCount.fontProperty().setValue(Font.font(80));
         ScoreCount.setFill(Color.GOLD);
         ScoreCount.setLayoutX(730);
-        ScoreCount.setLayoutY(50);
+        ScoreCount.setLayoutY(60);
 
 
         //life
-        ImageView life1=new ImageView(new Image("resource/"))
+        ImageView life1=new ImageView(new Image("resource/Life.png"));
+        life1.setLayoutX(0);
+        ImageView life2=new ImageView(new Image("resource/Life.png"));
+        life2.setLayoutX(35);
+        ImageView life3=new ImageView(new Image("resource/Life.png"));
+        life3.setLayoutX(70);
+        ImageView life4=new ImageView(new Image("resource/Life.png"));
+        life4.setLayoutX(105);
+        life4.setOpacity(0);
+        ImageView life5=new ImageView(new Image("resource/Life.png"));
+        life5.setLayoutX(140);
+        life5.setOpacity(0);
+
+
+
 
         background1.setLayoutX(0);
         background2.setLayoutX(1280);
@@ -146,7 +168,7 @@ public class Main extends Application {
         misile3.setLayoutY(plane.getLayoutY()-20);
 
 
-        game.getChildren().addAll(background1,background2,plane,misile1,misile2,misile3,enemy1,enemy2,enemy3, bullet[0],Bomb1,Bomb2,Bomb3,Score,misilesSet1,misilesSet2,misilesSet3,MisileRemaining,ScoreCount);
+        game.getChildren().addAll(background1,background2,plane,misile1,misile2,misile3,enemy1,enemy2,enemy3, bullet[0],Bomb1,Bomb2,Bomb3,Score,misilesSet1,misilesSet2,misilesSet3,MisileRemaining,ScoreCount,life1,life2,life3,life4,life5);
         Scene gameplay = new Scene(game, 1280, 720);
 
         KeyValue back1=new KeyValue(background1.layoutXProperty(),-1280);
@@ -169,8 +191,10 @@ public class Main extends Application {
                     //enter gameplay
                     primaryStage.setScene(gameplay);
                     gameTimeline.play();
+                    start=1;
 
                 });
+        exit.setOnAction(e->System.exit(0));
 
         gameplay.setOnKeyPressed(e->
         {
@@ -242,7 +266,24 @@ public class Main extends Application {
 
         });
 
+        BackgroundImage go = new BackgroundImage(new Image("resource/gameover.jpg"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+        ImageView con=new ImageView(new Image("resource/ContinueButton.png"));
+        ImageView exi=new ImageView(new Image("resource/exitButton.png"));
+        Button Contitnue=new Button("",con);
+        Contitnue.setOnAction(e->primaryStage.setScene(gameplay));
+        Button ex=new Button("",exi);
+        ex.setOnAction(e->System.exit(0));
+        AnchorPane Overpane=new AnchorPane();
+        Overpane.setBackground(new Background(go));
+        Overpane.getChildren().addAll(Contitnue,ex);
+        Contitnue.setLayoutX(280);
+        Contitnue.setLayoutY(400);
+        Contitnue.setPadding(Insets.EMPTY);
+        ex.setPadding(Insets.EMPTY);
+        ex.setLayoutX(804);
+        ex.setLayoutY(400);
 
+        Scene GameOver=new Scene(Overpane,1280,720);
 
         new AnimationTimer()
         {
@@ -363,7 +404,7 @@ public class Main extends Application {
                     enemy2.setOpacity(0);
                     misile1.setOpacity(0);
                     score+=10;
-                    System.out.println(score);
+                    ScoreCount.setText(score.toString());
                 }
                 if(enemy2Dead==0&&misile2Hit==0&&(misile2.getLayoutX()+70>=enemy2.getLayoutX()+2&&misile2.getLayoutX()<=enemy2.getLayoutX()+146)&&(misile2.getLayoutY()+19>=enemy2.getLayoutY()+24&&misile2.getLayoutY()<=enemy2.getLayoutY()+83))
                 {
@@ -371,7 +412,7 @@ public class Main extends Application {
                     enemy2.setOpacity(0);
                     misile2.setOpacity(0);
                     score+=10;
-                    System.out.println(score);
+                    ScoreCount.setText(score.toString());
                 }
                 if(enemy2Dead==0&&misile3Hit==0&&(misile3.getLayoutX()+70>=enemy2.getLayoutX()+2&&misile3.getLayoutX()<=enemy2.getLayoutX()+146)&&(misile3.getLayoutY()+19>=enemy2.getLayoutY()+24&&misile3.getLayoutY()<=enemy2.getLayoutY()+83))
                 {
@@ -395,8 +436,8 @@ public class Main extends Application {
                     enemy3Dead=1;
                     enemy3.setOpacity(0);
                     misile1.setOpacity(0);
-//                    score+=10;
-//                    System.out.println(score);
+                    score+=10;
+                    ScoreCount.setText(score.toString());
                 }
                 if(enemy3Dead==0&&misile2Hit==0&&(misile2.getLayoutX()+70>=enemy3.getLayoutX()+17&&misile2.getLayoutX()<=enemy3.getLayoutX()+106)&&(misile2.getLayoutY()+19>=enemy3.getLayoutY()+32&&misile2.getLayoutY()<=enemy3.getLayoutY()+108))
                 {
@@ -404,7 +445,7 @@ public class Main extends Application {
                     enemy3.setOpacity(0);
                     misile2.setOpacity(0);
                     score+=10;
-                    System.out.println(score);
+                    ScoreCount.setText(score.toString());
                 }
                 if(enemy3Dead==0&&misile3Hit==0&&(misile3.getLayoutX()+70>=enemy3.getLayoutX()+17&&misile3.getLayoutX()<=enemy3.getLayoutX()+106)&&(misile3.getLayoutY()+19>=enemy3.getLayoutY()+32&&misile3.getLayoutY()<=enemy3.getLayoutY()+108))
                 {
@@ -412,7 +453,7 @@ public class Main extends Application {
                     enemy3.setOpacity(0);
                     misile3.setOpacity(0);
                     score+=10;
-                    System.out.println(score);
+                    ScoreCount.setText(score.toString());
                 }
 
                 //dead enemy and scoring
@@ -444,14 +485,17 @@ public class Main extends Application {
                     }
                 }
                 //enemyBomb1ing
-                Bomb1.setLayoutX(Bomb1.getLayoutX()-10);
-                Bomb1.setLayoutY(Bomb1.getLayoutY());
+                if(start==1)
+                {
+                    Bomb1.setLayoutX(Bomb1.getLayoutX()-10);
+                    Bomb1.setLayoutY(Bomb1.getLayoutY());
 
-                Bomb2.setLayoutX(Bomb2.getLayoutX()-10);
-                Bomb2.setLayoutY(Bomb2.getLayoutY());
+                    Bomb2.setLayoutX(Bomb2.getLayoutX()-10);
+                    Bomb2.setLayoutY(Bomb2.getLayoutY());
 
-                Bomb3.setLayoutX(Bomb3.getLayoutX()-10);
-                Bomb3.setLayoutY(Bomb3.getLayoutY());
+                    Bomb3.setLayoutX(Bomb3.getLayoutX()-10);
+                    Bomb3.setLayoutY(Bomb3.getLayoutY());
+                }
                 if(Bomb1.getLayoutX()<-400)
                 {
                     Bomb1.setLayoutX(enemy1.getLayoutX()+10);
@@ -466,6 +510,29 @@ public class Main extends Application {
                 {
                     Bomb3.setLayoutX(enemy3.getLayoutX()-13);
                     Bomb3.setLayoutY(enemy3.getLayoutY()+30);
+                }
+
+                if((plane.getLayoutX()+197>=Bomb1.getLayoutX()+23&&plane.getLayoutX()+187<=Bomb1.getLayoutX()+23&&plane.getLayoutY()+91>=Bomb1.getLayoutY()+45&&plane.getLayoutY()<=Bomb1.getLayoutY()+31)||
+                        (plane.getLayoutX()+197>=Bomb2.getLayoutX()+23&&plane.getLayoutX()+187<=Bomb2.getLayoutX()+23&&plane.getLayoutY()+91>=Bomb2.getLayoutY()+45&&plane.getLayoutY()<=Bomb2.getLayoutY()+31)||
+                        (plane.getLayoutX()+197>=Bomb3.getLayoutX()+23&&plane.getLayoutX()+187<=Bomb3.getLayoutX()+23&&plane.getLayoutY()+91>=Bomb3.getLayoutY()+45&&plane.getLayoutY()<=Bomb3.getLayoutY()+31))
+                {
+                    if(life==3) {
+                        life3.setOpacity(0);
+                        life--;
+                    }
+                    else if(life==2) {
+                        life2.setOpacity(0);
+                        life--;
+                    }
+                    else if(life==1) {
+                        life1.setOpacity(0);
+                        life--;
+                    }
+                    else
+                    {
+
+                        primaryStage.setScene(GameOver);
+                    }
                 }
 
             }
